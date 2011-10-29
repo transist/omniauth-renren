@@ -8,10 +8,12 @@ Gem::Specification.new do |s|
   s.authors     = ["Scott Ballantyne"]
   s.email       = ["ussballantyne@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{an omniauth strategy for renren}
+  s.description = %q{an omniauth strategy for renren}
 
   s.rubyforge_project = "omniauth-renren"
+  s.add_dependency 'omniauth', '~> 1.0.0.rc2'
+  s.add_dependency 'omniauth-oauth2', '~> 1.0.0.rc2'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
