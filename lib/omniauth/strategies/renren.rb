@@ -43,7 +43,7 @@ module OmniAuth
       end
 
       def session_key
-        puts @access_token.inspect
+        puts @access_token.params.inspect
         @session_key ||= MultiJson.decode(@access_token.get('/renren_api/session_key?oauth_token='+@access_token.token))
       end
 
