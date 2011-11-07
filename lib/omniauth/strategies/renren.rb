@@ -7,12 +7,8 @@ module OmniAuth
     class Renren < OmniAuth::Strategies::OAuth2
       option :client_options, {
         :authorize_url => 'http://graph.renren.com/oauth/authorize',
-        :token_url => 'http://graph.renren.com/oauth/token',
-        :site => 'http://graph.renren.com/'
+        :token_url => 'http://graph.renren.com/oauth/token'
       }
-      def request_phase
-        super
-      end
 
       uid { raw_info['uid'] }
 
@@ -44,13 +40,30 @@ module OmniAuth
       end
 
       def session_key
-        puts @access_token.inspect
         @session_key ||= MultiJson.decode(@access_token.get('/renren_api/session_key'))
       end
 
       def request_phase
         options[:scope] ||= 'publish_feed'
         super
+      end
+
+      def build_access_token
+        if renren_session.nil? || renrensession.empty?
+          verifier = request.params['code']
+          self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options.token_params.to_hash(:symbolize_keys => true)))
+        else
+          self.access_token = ::OAuth2::AccessToken.new(client, renren_session['access_token'])
+        end
+      end
+
+      def renren_session
+        session_cookie = request.cookies["rrs_#{client.id}"]
+        if session_cookie
+          @renren_session ||= Rack::Utils.parse_query(request.cookies["rrs_#{client.id}"].gsub('"', ''))
+        else
+          nil
+        end
       end
 
       def raw_info
