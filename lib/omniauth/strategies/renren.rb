@@ -44,7 +44,7 @@ module OmniAuth
 
       def session_key
         puts @access_token.params.inspect
-        @session_key ||= MultiJson.decode(@access_token.get('/renren_api/session_key?oauth_token='+@access_token.token))
+        @session_key ||= MultiJson.decode(@access_token.get('https://graph.renren.com/renren_api/session_key'))
       end
 
       def request_phase
