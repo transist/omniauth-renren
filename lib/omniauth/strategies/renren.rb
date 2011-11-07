@@ -6,8 +6,8 @@ module OmniAuth
   module Strategies
     class Renren < OmniAuth::Strategies::OAuth2
       option :client_options, {
-        :authorize_url => 'http://graph.renren.com/oauth/authorize',
-        :token_url => 'http://graph.renren.com/oauth/token',
+        :authorize_url => 'https://graph.renren.com/oauth/authorize',
+        :token_url => 'https://graph.renren.com/oauth/token',
       }
       def request_phase
         super
