@@ -29,7 +29,7 @@ module OmniAuth
       
       def signed_params
         params = {}
-        params[:api_key] = client.id
+        params[:api_key] = client_id
         params[:method] = 'users.getInfo'
         params[:call_id] = Time.now.to_i
         params[:format] = 'json'
