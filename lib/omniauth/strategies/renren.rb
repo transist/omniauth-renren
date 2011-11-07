@@ -15,12 +15,12 @@ module OmniAuth
 
       info do
         {
-          "uid" => @access_token.params['user']['id'], 
-          "gender"=> (raw_info['gender'] == '0' ? 'Male' : 'Female'), 
-          "image"=>raw_info['logo50'],
+          "uid" => raw_info["uid"], 
+          "gender"=> (raw_info["sex"] == 1 ? 'Male' : 'Female'), 
+          "image"=>raw_info["headurl"],
           'name' => raw_info['name'],
           'urls' => {
-            'Kaixin' => "http://www.kaixin001.com/"
+            'Renren' => "http://www.renren.com/profile.do?id="+raw_info["uid"].to_s
           }
         }
       end
@@ -35,15 +35,11 @@ module OmniAuth
         params[:uids] = session_key['user']['id']
         params[:session_key] = session_key['renren_token']['session_key']
         params[:sig] = Digest::MD5.hexdigest(params.map{|k,v| "#{k}=#{v}"}.sort.join + client.secret)
-        puts 
-        puts params.inspect
         params
       end
 
       def session_key
-        puts @access_token.token
         response = @access_token.get('/renren_api/session_key', {:params => {:oauth_token => @access_token.token}})
-        puts response.inspect
         @session_key ||= MultiJson.decode(response.response.env[:body])
       end
 
@@ -54,7 +50,6 @@ module OmniAuth
 
       def build_access_token
         if renren_session.nil? || renren_session.empty?
-          puts 'no renren session'
           verifier = request.params['code']
           self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options))
           puts self.access_token.inspect
