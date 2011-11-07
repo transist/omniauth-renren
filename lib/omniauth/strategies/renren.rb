@@ -6,8 +6,9 @@ module OmniAuth
   module Strategies
     class Renren < OmniAuth::Strategies::OAuth2
       option :client_options, {
-        :authorize_url => 'https://graph.renren.com/oauth/authorize',
-        :token_url => 'https://graph.renren.com/oauth/token',
+        :authorize_url => 'http://graph.renren.com/oauth/authorize',
+        :token_url => 'http://graph.renren.com/oauth/token',
+        :site => 'http://graph.renren.com/'
       }
       def request_phase
         super
@@ -44,7 +45,7 @@ module OmniAuth
 
       def session_key
         puts @access_token.params.inspect
-        @session_key ||= MultiJson.decode(@access_token.get('https://graph.renren.com/renren_api/session_key'))
+        @session_key ||= MultiJson.decode(@access_token.get('/renren_api/session_key'))
       end
 
       def request_phase
