@@ -7,7 +7,8 @@ module OmniAuth
     class Renren < OmniAuth::Strategies::OAuth2
       option :client_options, {
         :authorize_url => 'http://graph.renren.com/oauth/authorize',
-        :token_url => 'http://graph.renren.com/oauth/token'
+        :token_url => 'http://graph.renren.com/oauth/token',
+        :site => 'http://graph.renren.com'
       }
 
       uid { raw_info['uid'] }
