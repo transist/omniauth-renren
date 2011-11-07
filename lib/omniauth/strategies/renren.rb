@@ -49,7 +49,7 @@ module OmniAuth
       end
 
       def build_access_token
-        if renren_session.nil? || renrensession.empty?
+        if renren_session.nil? || renren_session.empty?
           verifier = request.params['code']
           self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options))
         else
