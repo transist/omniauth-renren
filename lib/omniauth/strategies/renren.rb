@@ -15,7 +15,7 @@ module OmniAuth
 
       info do
         {
-          "uid" => @access_token.params['user'], 
+          "uid" => @access_token.params['user']['id'], 
           "gender"=> (raw_info['gender'] == '0' ? 'Male' : 'Female'), 
           "image"=>raw_info['logo50'],
           'name' => raw_info['name'],
@@ -72,7 +72,9 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= MultiJson.decode(Net::HTTP.post_form(URI.parse('http://api.renren.com/restserver.do'), signed_params).body)[0]
+        response = Net::HTTP.post_form(URI.parse('http://api.renren.com/restserver.do'), signed_params).body
+        puts response.inspect
+        @raw_info ||= MultiJson.decode(response)[0]
         puts @raw_info.inspect
         @raw_info
       rescue ::Errno::ETIMEDOUT
