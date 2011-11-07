@@ -53,25 +53,6 @@ module OmniAuth
         super
       end
 
-      def build_access_token
-        if renren_session.nil? || renren_session.empty?
-          super
-        else
-          @access_token = ::OAuth2::AccessToken.new(client, renren_session['access_token'])
-        end
-      end
-
-      def renren_session
-        session_cookie = request.cookies["rrs_#{client.id}"]
-        if session_cookie
-          @renren_session ||= Rack::Utils.parse_query(request.cookies["rrs_#{client.id}"].gsub('"', ''))
-          puts @renren_session.inspect
-          @renren_session
-        else
-          nil
-        end
-      end
-
       def raw_info
         @raw_info ||= MultiJson.decode(Net::HTTP.post_form(URI.parse('http://api.renren.com/restserver.do'), signed_params).body)[0]
         puts @raw_info.inspect
