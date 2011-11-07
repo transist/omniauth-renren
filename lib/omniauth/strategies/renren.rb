@@ -37,6 +37,8 @@ module OmniAuth
         params[:uids] = session_key['user']['id']
         params[:session_key] = session_key['renren_token']['session_key']
         params[:sig] = Digest::MD5.hexdigest(params.map{|k,v| "#{k}=#{v}"}.sort.join + client.secret)
+        puts 
+        puts params.inspect
         params
       end
 
