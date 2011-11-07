@@ -17,7 +17,7 @@ module OmniAuth
 
       info do
         {
-          "uid" => raw_info["uid"], 
+          "uid" => @access_token.params['user'], 
           "gender"=> (raw_info['gender'] == '0' ? 'Male' : 'Female'), 
           "image"=>raw_info['logo50'],
           'name' => raw_info['name'],
@@ -43,7 +43,7 @@ module OmniAuth
       end
 
       def session_key
-        puts @access_token.auth_code.inspect
+        puts @access_token.inspect
         @session_key ||= MultiJson.decode(@access_token.get('/renren_api/session_key?oauth_token='+@access_token.token))
       end
 
