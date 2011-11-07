@@ -51,7 +51,7 @@ module OmniAuth
       def build_access_token
         if renren_session.nil? || renrensession.empty?
           verifier = request.params['code']
-          self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options.token_params.to_hash(:symbolize_keys => true)))
+          self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options))
         else
           self.access_token = ::OAuth2::AccessToken.new(client, renren_session['access_token'])
         end
