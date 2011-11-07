@@ -65,6 +65,8 @@ module OmniAuth
         session_cookie = request.cookies["rrs_#{client.id}"]
         if session_cookie
           @renren_session ||= Rack::Utils.parse_query(request.cookies["rrs_#{client.id}"].gsub('"', ''))
+          puts @renren_session.inspect
+          @renren_session
         else
           nil
         end
