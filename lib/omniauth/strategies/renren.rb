@@ -45,7 +45,7 @@ module OmniAuth
 
       #http://wiki.dev.renren.com/wiki/%E6%9D%83%E9%99%90%E5%88%97%E8%A1%A8
       def request_phase
-        options[:scope] ||= 'publish_feed offline_access email publish_blog publish_checkin send_invitation send_message photo_upload status_update create_album publish_comment operate_like read_user_checkin read_user_blog read_user_feed read_user_guestbook read_user_invitation read_user_like_history read_user_message read_user_share'
+        options[:scope] ||= 'publish_feed offline_access email publish_blog publish_checkin send_invitation send_message photo_upload read_user_like_history'
         super
       end
 
