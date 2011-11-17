@@ -45,7 +45,7 @@ module OmniAuth
 
       #http://wiki.dev.renren.com/wiki/%E6%9D%83%E9%99%90%E5%88%97%E8%A1%A8
       def request_phase
-        options[:scope] ||= 'publish_feed offline_access email'
+        options[:scope] ||= 'publish_feed'
         super
       end
 
