@@ -6,21 +6,24 @@ module OmniAuth
   module Strategies
     class Renren < OmniAuth::Strategies::OAuth2
       option :client_options, {
-        :authorize_url => 'http://graph.renren.com/oauth/authorize',
-        :token_url => 'http://graph.renren.com/oauth/token',
-        :site => 'http://graph.renren.com'
+        :authorize_url => '/oauth/authorize',
+        :token_url => '/oauth/token',
+        :site =>  'http://graph.renren.com/'
       }
+      def request_phase
+        super
+      end
 
       uid { raw_info['uid'] }
 
       info do
         {
           "uid" => raw_info["uid"], 
-          "gender"=> (raw_info["sex"] == 1 ? 'Male' : 'Female'), 
-          "image"=>raw_info["headurl"],
+          "gender"=> (raw_info['gender'] == '0' ? 'Male' : 'Female'), 
+          "image"=>raw_info['logo50'],
           'name' => raw_info['name'],
           'urls' => {
-            'Renren' => "http://www.renren.com/profile.do?id="+raw_info["uid"].to_s
+            'Kaixin' => "http://www.kaixin001.com/"
           }
         }
       end
@@ -39,8 +42,7 @@ module OmniAuth
       end
 
       def session_key
-        response = @access_token.get('/renren_api/session_key', {:params => {:oauth_token => @access_token.token}})
-        @session_key ||= MultiJson.decode(response.response.env[:body])
+        @session_key ||= MultiJson.decode(@access_token.get("/renren_api/session_key?oauth_token=#{@access_token.token}").body)
       end
 
       def request_phase
@@ -50,12 +52,9 @@ module OmniAuth
 
       def build_access_token
         if renren_session.nil? || renren_session.empty?
-          verifier = request.params['code']
-          self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options))
-          puts self.access_token.inspect
-          self.access_token
+          super
         else
-          self.access_token = ::OAuth2::AccessToken.new(client, renren_session['access_token'])
+          @access_token = ::OAuth2::AccessToken.new(client, renren_session['access_token'])
         end
       end
 
@@ -69,10 +68,7 @@ module OmniAuth
       end
 
       def raw_info
-        response = Net::HTTP.post_form(URI.parse('http://api.renren.com/restserver.do'), signed_params).body
-        puts response.inspect
-        @raw_info ||= MultiJson.decode(response)[0]
-        puts @raw_info.inspect
+        @raw_info ||= MultiJson.decode(Net::HTTP.post_form(URI.parse('http://api.renren.com/restserver.do'), signed_params).body)[0]
         @raw_info
       rescue ::Errno::ETIMEDOUT
         raise ::Timeout::Error
