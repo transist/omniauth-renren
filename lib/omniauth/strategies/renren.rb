@@ -25,6 +25,10 @@ module OmniAuth
         }
       end
       
+      extra do
+        { :raw_info => raw_info }
+      end
+      
       def signed_params
         params = {}
         params[:api_key] = client.id
@@ -53,7 +57,6 @@ module OmniAuth
         if renren_session.nil? || renren_session.empty?
           verifier = request.params['code']
           self.access_token = client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(options))
-          puts self.access_token.inspect
           self.access_token
         else
           self.access_token = ::OAuth2::AccessToken.new(client, renren_session['access_token'])
